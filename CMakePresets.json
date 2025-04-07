@@ -1,0 +1,44 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 20,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "host",
+      "displayName": "Host Config",
+      "description": "Build for your host system (MacOs, Linux, Windows)",
+      "generator": "Ninja",
+      "binaryDir": "build/host/",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "DEBUG_MODE": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "unit_test",
+      "configurePreset": "host",
+      "jobs": 4
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "unit_test",
+      "displayName": "Unit Tests",
+      "configurePreset": "host",
+      "output": {
+        "outputJUnitFile": "unit-test.junit",
+        "outputOnFailure": true
+      },
+      "filter": {
+        "include": {
+          "name": "test"
+        }
+      }
+    }
+  ]
+}

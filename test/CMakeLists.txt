@@ -1,18 +1,19 @@
-################## test_broker ##################
-add_executable(test_broker
-        exampleLocalBroker/test_broker.c)
-target_link_libraries(test_broker
+add_executable(test_brokerMock
+        test_brokerMock.c
+)
+target_link_libraries(test_brokerMock
         unity
-        exampleLocalBroker
-        protocol)
-add_test(NAME test_broker COMMAND test_broker)
+        eaip_utils_brokerMock
+)
+add_test(test_brokerMock test_brokerMock)
 
-################## test_protocol ##################
 add_executable(test_protocol
-        protocol/test_protocol.c)
+        test_protocol.c
+)
 target_link_libraries(test_protocol
         unity
-        protocol
-        exampleLocalBroker
-        topicMatcher)
-add_test(NAME test_protocol COMMAND test_protocol)
+        eaip_utils_brokerMock
+        eai_protocol
+)
+add_test(test_protocol test_protocol)
+
