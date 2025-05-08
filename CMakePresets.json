@@ -11,7 +11,7 @@
       "displayName": "Host Config",
       "description": "Build for your host system (MacOs, Linux, Windows)",
       "generator": "Ninja",
-      "binaryDir": "build/host/",
+      "binaryDir": "C/build/host/",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "DEBUG_MODE": "ON"
