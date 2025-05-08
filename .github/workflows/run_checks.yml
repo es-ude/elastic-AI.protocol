@@ -1,87 +1,62 @@
-# Workflow requires Variables to be defined as follows:
-#   secrets.PUSH_TOKEN -> Password with rights to push to repository
-
-name: "Tests"
-
+name: "PR Validation"
 on:
   workflow_dispatch:
   pull_request:
     branches:
       - 'main'
-
 jobs:
   lint-commits:
+    name: Check Commit Message Style
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}
-          persist-credentials: false
           fetch-depth: 0
       - name: Lint Commits
-        uses: wagoid/commitlint-github-action@v5
+        uses: wagoid/commitlint-github-action@v6
         with:
           failOnWarnings: true
           failOnErrors: true
-
   clang-format:
-    runs-on: ubuntu-latest
+    name: Check C Code Formatting
     needs:
       - lint-commits
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        path:
+          - "C/src"
+          - "C/test"
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+      - name: Run clang-format style check for C/C++/Protobuf programs.
+        uses: jidicula/clang-format-action@v4.14.0
         with:
-          ref: ${{ github.head_ref }}
-          token: ${{ secrets.PUSH_TOKEN }}
-      - name: Install LLVM and Clang
-        uses: KyleMayes/install-llvm-action@v1
-        with:
-          version: "17"
-          directory: ${{ runner.temp }}/llvm
-      - name: Get C Files
-        run: |
-          echo SRC=$(git ls-tree --full-tree -r HEAD | grep -e "\.\(c\|h\)\$" | cut -f 2 | grep -v ^extern) >> $GITHUB_ENV
-      - name: Apply clang-format to Files
-        run: |
-          clang-format --style=file --fallback-style=llvm -i $SRC
-      - name: Commit Changes
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: "style(all): apply clang-format to '${{ github.head_ref }}'"
-          commit_user_name: github-actions
-          commit_user_email: action@github.com
-          commit_author: github-actions <action@github.com>
-      - name: Check For Updated Files
-        id: check-further-execution
-        if: steps.auto-commit.outputs.changes_detected =='true'
-        run: |
-          echo "Updates detected. Abort Workflow execution!" |
-          exit 1
-
+          clang-format-version: '17'
+          check-path: ${{ matrix.path }}
+          fallback-style: 'LLVM'
   unit-tests:
-    runs-on: ubuntu-latest
+    name: Perform unit-tests for C Code
     needs:
       - clang-format
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}
-      - name: Fetch Git Submodules
-        run: |
-          git submodule update --init --recursive
+          submodules: 'true'
       - name: Install Environment
         run: |
           sudo apt update
           sudo apt install -y ninja-build
       - name: Setup CMake
         run: |
-          cmake -B build/unit-tests -D CMAKE_BUILD_TYPE=DEBUG -G Ninja .
+          cmake --preset host
       - name: Build Targets
         run: |
-          cmake --build build/unit-tests -j 4
+          cmake --build --preset unit_test
       - name: Run Unit-Tests
         run: |
-          ctest --test-dir build/unit-tests/test --output-on-failure
+          ctest --preset unit_test
