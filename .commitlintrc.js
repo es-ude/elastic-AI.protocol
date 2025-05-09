@@ -12,7 +12,7 @@ module.exports = {
                   ]
                 ],
     'scope-case' : [ 2, "always", "kebab-case" ],
-    'scope-enum' : [ 2, "always", [ 'workflow', 'c-protocol', 'readme' ] ],
+    'scope-enum' : [ 2, "always", [ 'workflow', 'c-protocol', 'python-protocol', 'readme' ] ],
     'subject-empty' : [ 2, "never" ]
   }
 }
