@@ -5,8 +5,10 @@ dynamic = ["version"]
 authors = [{ name = "Department Intelligent Embedded Systems - University Duisburg-Essen" }]
 maintainers = [{ name = "David P. Federl", email = "david-peter.federl@uni-due.de" }]
 readme = "README.md"
-requires-python = ">=3.13"
-dependencies = []
+requires-python = ">=3.11"
+dependencies = [
+    "paho-mqtt>=2.1.0",
+]
 
 [dependency-groups]
 dev = [
@@ -35,7 +37,7 @@ requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["Python/elasticai"]
+packages = ["Python/elasticai", "Python/mqtt"]
 exclude = [
     "*_test.py",
 ]
@@ -100,7 +102,11 @@ select = [
     "ANN", # flake8 type annotations
     "RUF", # ruff-specific rules
 ]
+ignore = [
+    "ANN401" # allow Any as type
+]
 unfixable = ["B"]
+
 
 [tool.ruff.format]
 quote-style = "double"
@@ -109,7 +115,7 @@ line-ending = "auto"
 docstring-code-format = false
 
 [tool.ruff.lint.per-file-ignores]
-"*_test.py" = ["D"]
+"*_test.py" = ["D", "ANN"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
