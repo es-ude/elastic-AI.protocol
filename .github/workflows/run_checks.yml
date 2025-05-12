@@ -45,18 +45,28 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-        with:
-          submodules: 'true'
-      - name: Install Environment
-        run: |
-          sudo apt update
-          sudo apt install -y ninja-build
+      - name: Install build environment
+        uses: lukka/get-cmake@v4.02
       - name: Setup CMake
-        run: |
-          cmake --preset host
+        run: cmake --preset host
       - name: Build Targets
+        run: cmake --build --preset unit_test
+      - name: Run Unit-Tests
+        run: ctest --preset unit_test
+  pytest:
+    name: Perform unit-tests for Python
+    needs:
+      - lint-commits
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v6
+      - name: Install Python Environment
         run: |
-          cmake --build --preset unit_test
+          uv venv .venv
+          uv sync --all-groups
       - name: Run Unit-Tests
         run: |
-          ctest --preset unit_test
+          uv run pytest
