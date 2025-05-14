@@ -1,4 +1,4 @@
-# elastic-AU Protocol
+# elastic-AI Protocol
 
 The elastic-AI protocol (EAIP) provides a specification of a pub-sub-protocol.
 It is designed to work with MQTT, but this is **not** mandatory.
@@ -60,7 +60,9 @@ eiap://<base_domain>/<device_id>/<message_type>[/<type_dependent>]
   - The offline message is automatically sent by the broker after a connection loss (LWT).
   - The order of the data fields is arbitrary and not defined
 
-> [!NOTE] **Example message**
+> [!NOTE]
+>
+> **Example message**
 >
 > **Online Message of a elastic Node instance:**
 >
@@ -94,16 +96,18 @@ sequenceDiagram
 ### START
 
 - **Topic**
-   `eaip://<base_domain>/<device_id>/START/<data_id>`
+  `eaip://<base_domain>/<device_id>/START/<data_id>`
   - `<device_id>`: identifier of the participant to request data from
   - `<data_id>`: identifier of the data to request
 - **Message**
-   `device_id` of the requesting participant
+  `device_id` of the requesting participant
 - **Information**
   - Provider subscribes to topic to receive requests
   - Provided `data_id` can be published with an additional status field
 
-> [!NOTE] **Example message**
+> [!NOTE]
+>
+> **Example message**
 >
 > ```text
 > pub(topic="eaip://uni-due.de/es/client1/START/timer",msg="client2")
@@ -112,13 +116,15 @@ sequenceDiagram
 ### STOP
 
 - **Topic**
-   `eaip://<base_domain>/<object_id>/STOP/<data_id>`
+  `eaip://<base_domain>/<object_id>/STOP/<data_id>`
   - `<device_id>`: identifier of the participant to request data from
   - `<data_id>`: identifier of the data to request
 - **Message**
-   `device_id` of the requesting participant
+  `device_id` of the requesting participant
 
-> [!NOTE] **Example message**
+> [!NOTE]
+>
+> **Example message**
 >
 > ```text
 > pub(topic="eaip://uni-due.de/es/client1/STOP/timer",msg="client2")
@@ -127,15 +133,17 @@ sequenceDiagram
 ### DATA
 
 - **Topic**
-   `eip://<base_domain>/<device_id>/DATA/<data_id>`
+  `eip://<base_domain>/<device_id>/DATA/<data_id>`
   - `<device_id>`: identifier of the participant publishing data
   - `<data_id>`: identifier of the data to request
 - **Message**
-   Value encoded as a string
+  Value encoded as a string
 - **Information**
   - Interested participants can subscribe to this topic to receive new data
 
-> [!NOTE] **Example message**
+> [!NOTE]
+>
+> **Example message**
 >
 > ```text
 > pub(topic="eaip://uni-due.de/es/client1/DATA/light",msg="30.7")
@@ -194,13 +202,15 @@ sequenceDiagram
 ### DO
 
 - **Topic**
-   `eip://<base_domain>/<device_id>/DO/<command>`
+  `eip://<base_domain>/<device_id>/DO/<command>`
   - `<device_id>`: identifier of the participant publishing data
   - `<command>`: command to run
 - **Message**
-   command specific data
+  command specific data
 
-> [!NOTE] **Example message**
+> [!NOTE]
+>
+> **Example message**
 >
 > ```text
 > pub(topic="eaip://uni-due.de/es/client1/DO/led/01",msg="ON")
@@ -223,13 +233,15 @@ sequenceDiagram
 ### DONE
 
 - **Topic**
-   `eip://<base_domain>/<device_id>/DONE/<command>`
+  `eip://<base_domain>/<device_id>/DONE/<command>`
   - `<device_id>`: identifier of the participant publishing data
   - `<command>`: command to respond to
 - **Data**
-   command specific
+  command specific
 
-> [!NOTE] **Example message**
+> [!NOTE]
+>
+> **Example message**
 >
 > ```text
 > pub(topic="eip://uni-due.de/es/client1/DONE/led/1",msg="ON")
