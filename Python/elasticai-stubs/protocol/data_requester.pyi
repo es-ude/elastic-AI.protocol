@@ -1,0 +1,13 @@
+from elasticai.protocol.base import DeviceState as DeviceState
+from elasticai.protocol.base import Protocol as Protocol
+from elasticai.protocol.exceptions import (
+    DeviceNotAvailableError as DeviceNotAvailableError,
+)
+
+class DataRequester:
+    def __init__(
+        self, protocol: Protocol, target_device: str, data_id: str
+    ) -> None: ...
+    def start(self) -> None: ...
+    def stop(self) -> None: ...
+    def get_data(self) -> str | None: ...

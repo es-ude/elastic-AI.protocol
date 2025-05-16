@@ -39,7 +39,7 @@ requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["Python/elasticai", "Python/mqtt"]
+packages = ["Python/elasticai","Python/elasticai-stubs" ,  "Python/mqtt", "Python/mqtt-stubs"]
 exclude = [
     "*_test.py",
 ]
